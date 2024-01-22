@@ -24,7 +24,7 @@ import {BonsaiLowLevelCallbackReceiver} from "bonsai/BonsaiLowLevelCallbackRecei
 //       or difficult to implement function to a RISC Zero guest running on Bonsai.
 contract BonsaiStarterLowLevel is BonsaiLowLevelCallbackReceiver {
     // Cache of the results calculated by our guest program in Bonsai.
-    mapping(uint256 => bool) public membershipCache;
+    mapping(address => bool) public membershipCache;
 
     // The image id of the only binary we accept callbacks from
     bytes32 public immutable fibImageId;
@@ -34,12 +34,12 @@ contract BonsaiStarterLowLevel is BonsaiLowLevelCallbackReceiver {
         fibImageId = _fibImageId;
     }
 
-    event GetMembershipCallback(uint256 indexed n, bool result);
+    event GetMembershipCallback(address indexed n, bool result);
 
     /// @notice Returns nth number in the Fibonacci sequence.
     /// @dev The sequence is defined as 1, 1, 2, 3, 5 ... with fibonacci(0) == 1.
     ///      Only precomputed results can be returned. Call calculate_fibonacci(n) to precompute.
-    function  membership(uint256 n) external view returns (bool) {
+    function  membership(address n) external view returns (bool) {
         bool result =  membershipCache[n];
         return result;
     }
@@ -47,7 +47,7 @@ contract BonsaiStarterLowLevel is BonsaiLowLevelCallbackReceiver {
     /// @notice Callback function logic for processing verified journals from Bonsai.
     function bonsaiLowLevelCallback(bytes calldata journal, bytes32 imageId) internal override returns (bytes memory) {
         require(imageId == fibImageId);
-        (uint256 n, bool result) = abi.decode(journal, (uint256, bool));
+        (address n, bool result) = abi.decode(journal, (address, bool));
         emit GetMembershipCallback(n, result);
         membershipCache[n] = result;
         return new bytes(0);
@@ -57,7 +57,7 @@ contract BonsaiStarterLowLevel is BonsaiLowLevelCallbackReceiver {
     /// @dev This function sends the request to Bonsai through the on-chain relay.
     ///      The request will trigger Bonsai to run the specified RISC Zero guest program with
     ///      the given input and asynchronously return the verified results via the callback below.
-    function getMembership(uint256 n) external {
+    function getMembership(address n) external {
         bonsaiRelay.requestCallback(
             fibImageId, abi.encode(n), address(this), this.bonsaiLowLevelCallbackReceiver.selector, 30000
         );

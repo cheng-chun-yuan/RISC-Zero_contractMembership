@@ -26,7 +26,7 @@ contract BonsaiStarter is BonsaiCallbackReceiver {
     /// @notice Cache of the results calculated by our guest program in Bonsai.
     /// @dev Using a cache is one way to handle the callback from Bonsai. Upon callback, the
     ///      information from the journal is stored in the cache for later use by the contract.
-    mapping(uint256 => bool) public membershipCache;
+    mapping(address => bool) public membershipCache;
 
     /// @notice Image ID of the only zkVM binary to accept callbacks from.
     bytes32 public immutable fibImageId;
@@ -40,18 +40,18 @@ contract BonsaiStarter is BonsaiCallbackReceiver {
         fibImageId = _fibImageId;
     }
 
-    event GetMembershipCallback(uint256 indexed n, bool result);
+    event GetMembershipCallback(address indexed n, bool result);
 
     /// @notice Returns nth number in the Fibonacci sequence.
     /// @dev The sequence is defined as 1, 1, 2, 3, 5 ... with fibonacci(0) == 1.
     ///      Only precomputed results can be returned. Call calculate_fibonacci(n) to precompute.
-    function membership(uint256 n) external view returns (bool) {
+    function membership(address n) external view returns (bool) {
         bool result = membershipCache[n];
         return result;
     }
 
     /// @notice Callback function logic for processing verified journals from Bonsai.
-    function storeResult(uint256 n, bool result) external onlyBonsaiCallback(fibImageId) {
+    function storeResult(address n, bool result) external onlyBonsaiCallback(fibImageId) {
         emit GetMembershipCallback(n, result);
         membershipCache[n] = result;
     }
@@ -60,7 +60,7 @@ contract BonsaiStarter is BonsaiCallbackReceiver {
     /// @dev This function sends the request to Bonsai through the on-chain relay.
     ///      The request will trigger Bonsai to run the specified RISC Zero guest program with
     ///      the given input and asynchronously return the verified results via the callback below.
-    function getMembership(uint256 n) external {
+    function getMembership(address n) external {
         bonsaiRelay.requestCallback(
             fibImageId, abi.encode(n), address(this), this.storeResult.selector, BONSAI_CALLBACK_GAS_LIMIT
         );

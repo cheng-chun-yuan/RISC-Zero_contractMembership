@@ -14,16 +14,17 @@
 
 #![no_main]
 use std::io::Read;
-use ethabi::{ethereum_types::U256, ParamType, Token};
+
+use ethabi::{ethereum_types::Address, ParamType, Token};
 use risc0_zkvm::guest::env;
 
 risc0_zkvm::guest::entry!(main);
 
-fn membership(n: U256) -> bool {
-    let array: [U256; 3] = [
-        U256::from(1),
-        U256::from(2),
-        U256::from(3),
+fn membership(n: Address) -> bool {
+    let array: [Address; 3] = [
+        Address::from_slice(&[0x00; 20]), // Fake address 1
+        Address::from_slice(&[0x01; 20]), // Fake address 2
+        Address::from_slice(&[0x02; 20]), // Fake address 3
     ];
     array.iter().any(|&item| item == n)
 }
@@ -34,13 +35,12 @@ fn main() {
     env::stdin().read_to_end(&mut input_bytes).unwrap();
     // Type array passed to `ethabi::decode_whole` should match the types encoded in
     // the application contract.
-    let input = ethabi::decode_whole(&[ParamType::Uint(256)], &input_bytes).unwrap();
-    let n: U256 = input[0].clone().into_uint().unwrap();
-
+    let input = ethabi::decode_whole(&[ParamType::Address], &input_bytes).unwrap();
+    let n: Address = input[0].clone().into_address().unwrap();
     // Run the computation.
     let result = membership(n);
 
     // Commit the journal that will be received by the application contract.
     // Encoded types should match the args expected by the application callback.
-    env::commit_slice(&ethabi::encode(&[Token::Uint(n), Token::Bool(result)]));
+    env::commit_slice(&ethabi::encode(&[Token::Address(n), Token::Bool(result)]));
 }
