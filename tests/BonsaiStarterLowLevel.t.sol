@@ -30,7 +30,7 @@ contract BonsaiStarterLowLevelTest is BonsaiTest {
         // Anticipate a callback request to the relay
         vm.expectCall(address(bonsaiRelay), abi.encodeWithSelector(IBonsaiRelay.requestCallback.selector));
         // Request the callback
-        starter.calculateFibonacci(128);
+        starter.getMembership(128);
 
         // Anticipate a callback invocation on the starter contract
         vm.expectCall(address(starter), abi.encodeWithSelector(starter.bonsaiLowLevelCallbackReceiver.selector));
@@ -38,7 +38,7 @@ contract BonsaiStarterLowLevelTest is BonsaiTest {
         runPendingCallbackRequest();
 
         // Validate the Fibonacci solution value
-        uint256 result = starter.fibonacci(128);
-        assertEq(result, uint256(407305795904080553832073954));
+        bool result = starter.membership(128);
+        assertEq(result, false);
     }
 }
