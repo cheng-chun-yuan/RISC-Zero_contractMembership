@@ -61,10 +61,10 @@ It also provides an SDK in Rust that can be used to interact with it. You can ch
 2. Check the relayed result:
 
     ```bash
-    cast call "$APP_ADDRESS" 'fibonacci(uint256)' 10
+    cast call "$APP_ADDRESS" 'membership(address)' '0x0000000000000000000000000000000000000000'
     ```
 
-This example's arguments are the `BonsaiStarter` contract address and the number, N, to compute the Nth Fibonacci number.
+This example's arguments are the `BonsaiStarter` contract address and the number, N, to compute the Nth Membership number.
 You may need to change these values accordingly.
 
 The Relay source code with its SDK can be found in the [risc0/risc0] github repo.
@@ -74,13 +74,13 @@ The Relay source code with its SDK can be found in the [risc0/risc0] github repo
 1. Send a transaction to the starter contract:
 
     ```bash
-    cast send --private-key 0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d --gas-limit 100000 "$APP_ADDRESS" 'calculateFibonacci(uint256)' 5
+    cast send --private-key 0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d --gas-limit 100000 "$APP_ADDRESS" 'getMembership(address)' '0x0000000000000000000000000000000000000000'
     ```
 
 2. Check the relayed result:
 
     ```bash
-    cast call "$APP_ADDRESS" 'fibonacci(uint256)' 5
+    cast call "$APP_ADDRESS" 'membership(address)' '0x0000000000000000000000000000000000000000'
     ```
 
 ### Deploy a new version of your application:
@@ -162,7 +162,7 @@ You now have a deployment on a testnet that you can interact with sending either
 2. Check the relayed result:
 
     ```bash
-    cast call --rpc-url https://eth-sepolia.g.alchemy.com/v2/$ALCHEMY_API_KEY "$APP_ADDRESS" 'fibonacci(uint256)' 10
+    cast call --rpc-url https://eth-sepolia.g.alchemy.com/v2/$ALCHEMY_API_KEY "$APP_ADDRESS" 'membership(address)' '0x0000000000000000000000000000000000000000'
     ```
 
 ### On-chain callback request
@@ -170,13 +170,13 @@ You now have a deployment on a testnet that you can interact with sending either
 1. Send a transaction to the starter contract:
 
     ```bash
-    cast send --rpc-url https://eth-sepolia.g.alchemy.com/v2/$ALCHEMY_API_KEY --private-key "$DEPLOYER_PRIVATE_KEY" --gas-limit 100000 "$APP_ADDRESS" 'calculateFibonacci(uint256)' 5
+    cast send --rpc-url https://eth-sepolia.g.alchemy.com/v2/$ALCHEMY_API_KEY --private-key "$DEPLOYER_PRIVATE_KEY" --gas-limit 100000 "$APP_ADDRESS" 'getMembership(address)' '0x0000000000000000000000000000000000000000'
     ```
 
 2. Check the relayed result:
 
     ```bash
-    cast call --rpc-url https://eth-sepolia.g.alchemy.com/v2/$ALCHEMY_API_KEY "$APP_ADDRESS" 'fibonacci(uint256)' 5
+    cast call --rpc-url https://eth-sepolia.g.alchemy.com/v2/$ALCHEMY_API_KEY "$APP_ADDRESS" 'membership(address)' '0x0000000000000000000000000000000000000000'
     ```
 
 [Bonsai]: https://risczero.com/bonsai

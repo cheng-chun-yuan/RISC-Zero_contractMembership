@@ -25,7 +25,7 @@ contract BonsaiStarterLowLevelTest is BonsaiTest {
 
     function testMockLowLevelCall() public {
         // Deploy a new starter instance
-        BonsaiStarterLowLevel starter = new BonsaiStarterLowLevel(IBonsaiRelay(bonsaiRelay), queryImageId("FIBONACCI"));
+        BonsaiStarterLowLevel starter = new BonsaiStarterLowLevel(IBonsaiRelay(bonsaiRelay), queryImageId("MEMBERSHIP"));
         address prankAddress = address(0x0000000000000000000000000000000000000001);
         // Anticipate a callback request to the relay
         vm.expectCall(address(bonsaiRelay), abi.encodeWithSelector(IBonsaiRelay.requestCallback.selector));
@@ -37,7 +37,7 @@ contract BonsaiStarterLowLevelTest is BonsaiTest {
         // Relay the solution as a callback
         runPendingCallbackRequest();
 
-        // Validate the Fibonacci solution value
+        // Validate the MEMBERSHIP solution value
         bool result = starter.membership(prankAddress);
         assertEq(result, false);
     }

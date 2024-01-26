@@ -36,9 +36,9 @@ contract BonsaiStarterLowLevel is BonsaiLowLevelCallbackReceiver {
 
     event GetMembershipCallback(address indexed n, bool result);
 
-    /// @notice Returns nth number in the Fibonacci sequence.
-    /// @dev The sequence is defined as 1, 1, 2, 3, 5 ... with fibonacci(0) == 1.
-    ///      Only precomputed results can be returned. Call calculate_fibonacci(n) to precompute.
+    /// @notice Returns nth number in the MEMBERSHIP sequence.
+    /// @dev The sequence is defined as 1, 1, 2, 3, 5 ... with MEMBERSHIP(0) == 1.
+    ///      Only precomputed results can be returned. Call calculate_MEMBERSHIP(n) to precompute.
     function  membership(address n) external view returns (bool) {
         bool result =  membershipCache[n];
         return result;
@@ -53,7 +53,7 @@ contract BonsaiStarterLowLevel is BonsaiLowLevelCallbackReceiver {
         return new bytes(0);
     }
 
-    /// @notice Sends a request to Bonsai to have have the nth Fibonacci number calculated.
+    /// @notice Sends a request to Bonsai to have have the nth MEMBERSHIP number calculated.
     /// @dev This function sends the request to Bonsai through the on-chain relay.
     ///      The request will trigger Bonsai to run the specified RISC Zero guest program with
     ///      the given input and asynchronously return the verified results via the callback below.

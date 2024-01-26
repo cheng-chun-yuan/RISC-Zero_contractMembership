@@ -20,7 +20,7 @@ use anyhow::Context;
 use bonsai_ethereum_relay::sdk::client::{CallbackRequest, Client};
 use clap::Parser;
 use ethers::{types::Address, utils::id};
-use methods::FIBONACCI_ID;
+use methods::MEMBERSHIP_ID;
 use risc0_zkvm::sha::Digest;
 
 /// Exmaple code for sending a REST API request to the Bonsai relay service to
@@ -32,7 +32,7 @@ struct Args {
     /// Adress for the BonsaiStarter application contract.
     address: Address,
 
-    /// Input N for calculating the Nth Fibonacci number.
+    /// Input N for calculating the Nth MEMBERSHIP number.
     number: u32,
 
     /// Bonsai Relay API URL.
@@ -64,7 +64,7 @@ async fn main() -> anyhow::Result<()> {
     )
     .context("Failed to initialize the relay client")?;
 
-    // Initialize the input for the FIBONACCI guest.
+    // Initialize the input for the MEMBERSHIP guest.
     let input = U256::from(args.number).abi_encode();
 
     // Set the function selector of the callback function.
@@ -77,7 +77,7 @@ async fn main() -> anyhow::Result<()> {
         callback_contract: args.address.into(),
         function_selector,
         gas_limit: 3000000,
-        image_id: Digest::from(FIBONACCI_ID).into(),
+        image_id: Digest::from(MEMBERSHIP_ID).into(),
         input,
     };
 

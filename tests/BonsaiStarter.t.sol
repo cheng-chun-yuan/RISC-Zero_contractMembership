@@ -25,8 +25,8 @@ contract BonsaiStarterTest is BonsaiTest {
 
     // Test the BonsaiStarter contract by mocking an off-chain callback request
     function testOffChainMock() public {
-        bytes32 imageId = queryImageId("FIBONACCI");
-        address prankAddress = address(0x0000000000000000000000000000000000000000);
+        bytes32 imageId = queryImageId("MEMBERSHIP");
+        address prankAddress = address(0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266);
         // Deploy a new starter instance
         BonsaiStarter starter = new BonsaiStarter(IBonsaiRelay(bonsaiRelay), imageId);
         // Anticipate a callback invocation on the starter contract
@@ -37,7 +37,7 @@ contract BonsaiStarterTest is BonsaiTest {
             imageId, abi.encode(prankAddress), address(starter), starter.storeResult.selector, BONSAI_CALLBACK_GAS_LIMIT
         );
 
-        // Validate the Fibonacci solution value
+        // Validate the Membership solution value
         bool result = starter.membership(prankAddress);
         assertEq(result, true);
     }
@@ -45,8 +45,8 @@ contract BonsaiStarterTest is BonsaiTest {
     // Test the BonsaiStarter contract by mocking an on-chain callback request
     function testOnChainMock() public {
         // Deploy a new starter instance
-        address prankAddress = address(0x0000000000000000000000000000000000000000);
-        BonsaiStarter starter = new BonsaiStarter(IBonsaiRelay(bonsaiRelay), queryImageId("FIBONACCI"));
+        address prankAddress = address(0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266);
+        BonsaiStarter starter = new BonsaiStarter(IBonsaiRelay(bonsaiRelay), queryImageId("MEMBERSHIP"));
         // Anticipate an on-chain callback request to the relay
         vm.expectCall(address(bonsaiRelay), abi.encodeWithSelector(IBonsaiRelay.requestCallback.selector));
         // Request the on-chain callback
@@ -57,7 +57,7 @@ contract BonsaiStarterTest is BonsaiTest {
         // Relay the solution as a callback
         runPendingCallbackRequest();
 
-        // Validate the Fibonacci solution value
+        // Validate the MEMBERSHIP solution value
         bool result = starter.membership(prankAddress);
         assertEq(result, true);
     }

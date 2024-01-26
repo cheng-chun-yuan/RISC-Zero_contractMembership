@@ -21,11 +21,14 @@ use risc0_zkvm::guest::env;
 risc0_zkvm::guest::entry!(main);
 
 fn membership(n: Address) -> bool {
-    let array: [Address; 3] = [
+    let array: [Address; 5] = [
         Address::from_slice(&[0x00; 20]), // Fake address 1
         Address::from_slice(&[0x01; 20]), // Fake address 2
         Address::from_slice(&[0x02; 20]), // Fake address 3
+        Address::from_slice(&[0x03; 20]), // Fake address 3
+        Address::from_slice(&[0x04; 20]), // Fake address 3
     ];
+    
     array.iter().any(|&item| item == n)
 }
 
